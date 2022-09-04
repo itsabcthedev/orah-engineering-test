@@ -1,4 +1,5 @@
-@import-normalize; /* bring in normalize.css styles */
+@import-normalize;
+/* bring in normalize.css styles */
 
 .app {
   text-align: center;
@@ -16,4 +17,24 @@
 
 .app-header a {
   color: #fff;
+}
+
+input[type="text"] {
+  border: none !important;
+}
+
+input[text="text"]:focus-visible {
+  border: none;
+}
+
+:focus-visible {
+  outline: none !important;
+}
+
+.c-pointer {
+  cursor: pointer;
+}
+
+.p-1 {
+  padding: 0.5rem;
 }

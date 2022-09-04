@@ -1,17 +1,16 @@
-import React, { useState, useEffect } from "react"
-import styled from "styled-components"
-import Button from "@material-ui/core/Button"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { Spacing, BorderRadius, FontWeight } from "shared/styles/styles"
-import { Colors } from "shared/styles/colors"
+import React, { useEffect, useState } from "react"
 import { CenteredContainer } from "shared/components/centered-container/centered-container.component"
-import { Person, PersonHelper } from "shared/models/person"
+import { PopUp } from "shared/components/popup/popup.component"
+import { SwitchSort } from "shared/components/switch-sort/switch-sort.component"
+import ToolTip from "shared/components/tooltip/tooltip.component"
 import { useApi } from "shared/hooks/use-api"
+import { Person, PersonHelper, sortData, SortDataModel } from "shared/models/person"
+import { Spacing } from "shared/styles/styles"
+import { ActiveRollAction, ActiveRollOverlay } from "staff-app/components/active-roll-overlay/active-roll-overlay.component"
+import { Toolbar, ToolbarAction } from "staff-app/components/header/toolbar.component"
 import { StudentListTile } from "staff-app/components/student-list-tile/student-list-tile.component"
-import { ActiveRollOverlay, ActiveRollAction } from "staff-app/components/active-roll-overlay/active-roll-overlay.component"
-import { SortAscIcon } from "staff-app/components/icons/sort-icons/sort-asc-icon.component"
-import { SortDescIcon } from "staff-app/components/icons/sort-icons/sort-desc-icon.component"
-
+import styled from "styled-components"
 
 export type SortMode = "asc" | "des"
 
@@ -21,7 +20,11 @@ export const HomeBoardPage: React.FC = () => {
   const [isSearchMode, setIsSearchMode] = useState(false)
   const [sortMode, setSortMode] = useState<SortMode>("asc")
   const [getStudents, data, loadState] = useApi<{ students: Person[] }>({ url: "get-homeboard-students" })
-  const [studentsData, setStudentsData] = useState<Person[]>([]);
+  const [studentsData, setStudentsData] = useState<Person[]>([])
+  const [sortType, setSortType] = useState<SortDataModel[]>([]);
+  const [isCheckAll, setIsCheckAll] = useState(false);
+  const [isCheck, setIsCheck] = useState<string[]>([]);
+  const [sortByTitle, setSortByTitle] = useState("Full Name");
 
   useEffect(() => {
     getStudents()
@@ -33,6 +36,42 @@ export const HomeBoardPage: React.FC = () => {
     }
   }, [data?.students])
 
+  useEffect(() => {
+    setSortType(sortData);
+    setIsCheck(sortType.map((li) => li.id));
+  }, [sortType]);
+
+  useEffect(() => {
+    if (isCheck.length === sortType.length) {
+      setIsCheckAll(true);
+      setSortByTitle("Full Name")
+    }
+    else {
+      setIsCheckAll(false);
+      setSortByTitle(sortType.filter(x => x.id === isCheck.map((li) => li).toString()).map(y => y.title).toString())
+    }
+    if (!isCheck.length) {
+      setSortByTitle("Full Name")
+    }
+  }, [isCheck, sortType]);
+
+  const handleSelectAll = () => {
+    setIsCheckAll(!isCheckAll);
+    setIsCheck(sortType.map((li) => li.id));
+    if (isCheckAll) {
+      setIsCheck([]);
+    }
+  };
+
+  const handleChangeSortType = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { id, checked } = e.target;
+    setIsCheck([...isCheck, id]);
+    if (!checked) {
+      setIsCheck(isCheck.filter((item) => item !== id));
+    }
+  };
+
+
   const onToolbarAction = (action: ToolbarAction) => {
     switch (action) {
       case "sort":
@@ -40,17 +79,17 @@ export const HomeBoardPage: React.FC = () => {
         setIsRollMode(false)
         setIsSearchMode(false)
         onSortStudents()
-        break;
+        break
       case "search":
         setIsSortMode(false)
         setIsRollMode(false)
         setIsSearchMode(true)
-        break;
+        break
       case "roll":
         setIsRollMode(true)
         setIsSortMode(false)
         setIsSearchMode(false)
-        break;
+        break
       default:
         setIsRollMode(false)
         setIsSortMode(false)
@@ -65,8 +104,7 @@ export const HomeBoardPage: React.FC = () => {
   }
 
   const searchStudents = (search: string) => {
-    if (!!data?.students)
-      setStudentsData(data.students.filter(x => PersonHelper.getFullName(x).toLowerCase().includes(search.toLowerCase())))
+    if (!!data?.students) setStudentsData(data.students.filter((x) => PersonHelper.getFullName(x).toLowerCase().includes(search.toLowerCase())))
   }
 
   const onSortStudents = () => {
@@ -74,20 +112,19 @@ export const HomeBoardPage: React.FC = () => {
       if (sortMode === "asc") {
         let AscData = data.students.sort((x, y) => {
           let a = PersonHelper.getFullName(x).toUpperCase(),
-            b = PersonHelper.getFullName(y).toUpperCase();
-          return a == b ? 0 : a > b ? 1 : -1;
-        });
-        setStudentsData(AscData);
-        setSortMode("des");
-      }
-      else {
+            b = PersonHelper.getFullName(y).toUpperCase()
+          return a == b ? 0 : a > b ? 1 : -1
+        })
+        setStudentsData(AscData)
+        setSortMode("des")
+      } else {
         let DescData = data.students.sort((x, y) => {
           let a = PersonHelper.getFullName(x).toUpperCase(),
-            b = PersonHelper.getFullName(y).toUpperCase();
-          return a == b ? 0 : a > b ? -1 : 1;
-        });
-        setStudentsData(DescData);
-        setSortMode("asc");
+            b = PersonHelper.getFullName(y).toUpperCase()
+          return a == b ? 0 : a > b ? -1 : 1
+        })
+        setStudentsData(DescData)
+        setSortMode("asc")
       }
     }
   }
@@ -95,7 +132,15 @@ export const HomeBoardPage: React.FC = () => {
   return (
     <>
       <S.PageContainer>
-        <Toolbar onItemClick={onToolbarAction} isSearchMode={isSearchMode} searchStudents={searchStudents} isSortMode={isSortMode} sortMode={sortMode} />
+        <PopUp Icon={<ToolTip toolTipText="Click to switch between sort by first name or last name"><FontAwesomeIcon icon="plus-circle" size={"lg"} /></ToolTip>}>
+          <SwitchSort isCheckAll={isCheckAll}
+            handleSelectAll={handleSelectAll}
+            sortType={sortType}
+            isCheck={isCheck}
+            handleClick={handleChangeSortType}
+          />
+        </PopUp>
+        <Toolbar sortByTitle={sortByTitle} onItemClick={onToolbarAction} isSearchMode={isSearchMode} searchStudents={searchStudents} isSortMode={isSortMode} sortMode={sortMode} />
         {loadState === "loading" && (
           <CenteredContainer>
             <FontAwesomeIcon icon="spinner" size="2x" spin />
@@ -105,7 +150,7 @@ export const HomeBoardPage: React.FC = () => {
         {loadState === "loaded" && data?.students && (
           <>
             {studentsData.map((s) => (
-              <StudentListTile key={s.id} isRollMode={isRollMode} student={s} />
+              <StudentListTile key={s.id} isRollMode={isRollMode} student={s} isCheckedAll={isCheckAll} isChecked={isCheck.map((li) => li).toString()} />
             ))}
           </>
         )}
@@ -121,50 +166,11 @@ export const HomeBoardPage: React.FC = () => {
   )
 }
 
-type ToolbarAction = "roll" | "sort" | "search"
-interface ToolbarProps {
-  onItemClick: (action: ToolbarAction, value?: string) => void;
-  isSearchMode: boolean;
-  isSortMode: boolean;
-  searchStudents: (search: string) => void;
-  sortMode: SortMode;
-}
-
-const Toolbar: React.FC<ToolbarProps> = (props) => {
-  const { onItemClick, isSearchMode, searchStudents, isSortMode, sortMode } = props
-  return (
-    <S.ToolbarContainer>
-      <S.Button onClick={() => onItemClick("sort")}>First Name {isSortMode && (sortMode === "des" ? <SortAscIcon onClick={() => { }} /> : <SortDescIcon onClick={() => { }} />)}
-      </S.Button>
-      {isSearchMode ? <input placeholder="Search..." type={"text"} onChange={(e) => { e.preventDefault(); searchStudents(e.target.value) }} /> : <S.Button onClick={() => onItemClick("search")}>Search</S.Button>}
-      <S.Button onClick={() => onItemClick("roll")}>Start Roll</S.Button>
-    </S.ToolbarContainer>
-  )
-}
-
 const S = {
   PageContainer: styled.div`
     display: flex;
     flex-direction: column;
     width: 50%;
     margin: ${Spacing.u4} auto 140px;
-  `,
-  ToolbarContainer: styled.div`
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    color: #fff;
-    background-color: ${Colors.blue.base};
-    padding: 6px 14px;
-    font-weight: ${FontWeight.strong};
-    border-radius: ${BorderRadius.default};
-  `,
-  Button: styled(Button)`
-    && {
-      padding: ${Spacing.u2};
-      font-weight: ${FontWeight.strong};
-      border-radius: ${BorderRadius.default};
-      color:#fff
-    }
   `,
 }

@@ -8,14 +8,16 @@ import { RollStateSwitcher } from "staff-app/components/roll-state/roll-state-sw
 
 interface Props {
   isRollMode?: boolean
-  student: Person
+  student: Person;
+  isCheckedAll?: boolean;
+  isChecked: string
 }
-export const StudentListTile: React.FC<Props> = ({ isRollMode, student }) => {
+export const StudentListTile: React.FC<Props> = ({ isRollMode, student, isCheckedAll, isChecked }) => {
   return (
     <S.Container>
       <S.Avatar url={Images.avatar}></S.Avatar>
       <S.Content>
-        <div>{PersonHelper.getFullName(student)}</div>
+        <div>{isCheckedAll || !isChecked ? PersonHelper.getFullName(student) : student[isChecked as keyof Person]}</div>
       </S.Content>
       {isRollMode && (
         <S.Roll>
