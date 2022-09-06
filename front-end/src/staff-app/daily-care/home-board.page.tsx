@@ -22,6 +22,7 @@ export const HomeBoardPage: React.FC = () => {
   const [isSearchMode, setIsSearchMode] = useState(false)
   const [sortMode, setSortMode] = useState<SortMode>("asc")
   const [getStudents, data, loadState] = useApi<{ students: Person[] }>({ url: "get-homeboard-students" })
+  const [submitRoll, loadStateRoll] = useApi({ url: "save-roll" })
   const [studentsData, setStudentsData] = useState<StudentsRollType[]>([])
   const [filterStudentsData, setFilterStudentsData] = useState<StudentsRollType[]>([])
   const [sortType, setSortType] = useState<SortDataModel[]>([]);
@@ -42,6 +43,10 @@ export const HomeBoardPage: React.FC = () => {
         if (temp?.roll_state && temp.student_id) {
           e.student_id = temp.student_id,
             e.roll_state = temp.roll_state
+        }
+        else {
+          e.student_id = 0,
+            e.roll_state = "unmark"
         }
         return e;
       }))
@@ -124,12 +129,20 @@ export const HomeBoardPage: React.FC = () => {
     if (action === "filter" && !!value) {
       setFilterKey(value)
     }
-    else {
+    else if (action === "exit") {
       setIsRollMode(false)
       setFilterKey("all")
+      setRollData([])
+    }
+    else {
+      let param: RollInput = {
+        "student_roll_states": rollData
+      }
+      submitRoll(param);
     }
   }
 
+  console.log("object", loadStateRoll)
   const searchStudents = (search: string) => {
     setFilterStudentsData(studentsData.filter((x) => PersonHelper.getFullName(x).toLowerCase().includes(search.toLowerCase())))
   }
@@ -153,7 +166,6 @@ export const HomeBoardPage: React.FC = () => {
       setSortMode("asc")
     }
   }
-
 
   const rollDetails = (rollType: RolllStateType, id?: number) => {
     if (!!id) {
@@ -194,7 +206,7 @@ export const HomeBoardPage: React.FC = () => {
           </CenteredContainer>
         )}
       </S.PageContainer>
-      <ActiveRollOverlay isActive={isRollMode} onItemClick={onActiveRollAction} StudentsRollData={studentsData} />
+      {isRollMode && <ActiveRollOverlay isActive={isRollMode} onItemClick={onActiveRollAction} StudentsRollData={studentsData} />}
     </>
   )
 }

@@ -5,7 +5,7 @@ import { BorderRadius, Spacing } from "shared/styles/styles"
 import { ItemType, RollStateList } from "staff-app/components/roll-state/roll-state-list.component"
 import { StudentsRollType } from "shared/models/roll"
 
-export type ActiveRollAction = "filter" | "exit"
+export type ActiveRollAction = "filter" | "complete" | "exit"
 
 interface Props {
   isActive: boolean
@@ -14,11 +14,7 @@ interface Props {
 }
 
 export const ActiveRollOverlay: React.FC<Props> = (props) => {
-  const [Data, setData] = useState<StudentsRollType[]>([])
-  const { isActive, onItemClick } = props
-  useEffect(() => {
-    setData(props.StudentsRollData)
-  }, [props.StudentsRollData])
+  const { isActive, onItemClick, StudentsRollData } = props
   return (
     <S.Overlay isActive={isActive}>
       <S.Content>
@@ -26,10 +22,10 @@ export const ActiveRollOverlay: React.FC<Props> = (props) => {
         <div>
           <RollStateList
             stateList={[
-              { type: "all", count: Data.length },
-              { type: "present", count: Data.filter(x => x.roll_state === "present").length },
-              { type: "late", count: Data.filter(x => x.roll_state === "late").length },
-              { type: "absent", count: Data.filter(x => x.roll_state === "absent").length },
+              { type: "all", count: StudentsRollData.length },
+              { type: "present", count: StudentsRollData.filter(x => x.roll_state === "present").length },
+              { type: "late", count: StudentsRollData.filter(x => x.roll_state === "late").length },
+              { type: "absent", count: StudentsRollData.filter(x => x.roll_state === "absent").length },
             ]}
             onItemClick={onItemClick}
           />
@@ -37,7 +33,7 @@ export const ActiveRollOverlay: React.FC<Props> = (props) => {
             <Button color="inherit" onClick={() => onItemClick("exit")}>
               Exit
             </Button>
-            <Button color="inherit" style={{ marginLeft: Spacing.u2 }} onClick={() => onItemClick("exit")}>
+            <Button color="inherit" style={{ marginLeft: Spacing.u2 }} onClick={() => onItemClick("complete")}>
               Complete
             </Button>
           </div>
