@@ -34,7 +34,7 @@ export const Toolbar: React.FC<ToolbarProps> = (props) => {
             ) : (
                 <ToolTip toolTipText="Click to search"><S.Button onClick={() => onItemClick("search")}>Search</S.Button></ToolTip>
             )}
-            <S.Button onClick={() => onItemClick("roll")}>Start Roll</S.Button>
+            <ToolTip toolTipText="Click to start roll"><S.Button onClick={() => onItemClick("roll")}>Start Roll</S.Button></ToolTip>
         </S.ToolbarContainer>
     )
 }

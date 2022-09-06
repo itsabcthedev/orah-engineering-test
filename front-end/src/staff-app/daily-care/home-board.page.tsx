@@ -6,9 +6,11 @@ import { SwitchSort } from "shared/components/switch-sort/switch-sort.component"
 import ToolTip from "shared/components/tooltip/tooltip.component"
 import { useApi } from "shared/hooks/use-api"
 import { Person, PersonHelper, sortData, SortDataModel } from "shared/models/person"
+import { RollDataModel, RollInput, RolllStateType, StudentsRollType } from "shared/models/roll"
 import { Spacing } from "shared/styles/styles"
 import { ActiveRollAction, ActiveRollOverlay } from "staff-app/components/active-roll-overlay/active-roll-overlay.component"
 import { Toolbar, ToolbarAction } from "staff-app/components/header/toolbar.component"
+import { ItemType } from "staff-app/components/roll-state/roll-state-list.component"
 import { StudentListTile } from "staff-app/components/student-list-tile/student-list-tile.component"
 import styled from "styled-components"
 
@@ -20,26 +22,44 @@ export const HomeBoardPage: React.FC = () => {
   const [isSearchMode, setIsSearchMode] = useState(false)
   const [sortMode, setSortMode] = useState<SortMode>("asc")
   const [getStudents, data, loadState] = useApi<{ students: Person[] }>({ url: "get-homeboard-students" })
-  const [studentsData, setStudentsData] = useState<Person[]>([])
+  const [studentsData, setStudentsData] = useState<StudentsRollType[]>([])
+  const [filterStudentsData, setFilterStudentsData] = useState<StudentsRollType[]>([])
   const [sortType, setSortType] = useState<SortDataModel[]>([]);
   const [isCheckAll, setIsCheckAll] = useState(false);
   const [isCheck, setIsCheck] = useState<string[]>([]);
   const [sortByTitle, setSortByTitle] = useState("Full Name");
+  const [rollData, setRollData] = useState<RollDataModel[]>([]);
+  const [filterKey, setFilterKey] = useState<ItemType>("all");
 
   useEffect(() => {
     getStudents()
   }, [getStudents])
 
   useEffect(() => {
-    if (!!data?.students) {
-      setStudentsData(data.students)
+    if (!!data?.students)
+      setStudentsData(data.students.map((e: any) => {
+        let temp = rollData.find(element => element.student_id === e.id)
+        if (temp?.roll_state && temp.student_id) {
+          e.student_id = temp.student_id,
+            e.roll_state = temp.roll_state
+        }
+        return e;
+      }))
+  }, [data?.students, rollData])
+
+  useEffect(() => {
+    if (filterKey === "all") {
+      setFilterStudentsData(studentsData)
     }
-  }, [data?.students])
+    else { setFilterStudentsData(studentsData.filter(x => x.roll_state === filterKey)); }
+  }, [filterKey, studentsData])
+
 
   useEffect(() => {
     setSortType(sortData);
     setIsCheck(sortType.map((li) => li.id));
   }, [sortType]);
+
 
   useEffect(() => {
     if (isCheck.length === sortType.length) {
@@ -54,6 +74,7 @@ export const HomeBoardPage: React.FC = () => {
       setSortByTitle("Full Name")
     }
   }, [isCheck, sortType]);
+
 
   const handleSelectAll = () => {
     setIsCheckAll(!isCheckAll);
@@ -78,12 +99,14 @@ export const HomeBoardPage: React.FC = () => {
         setIsSortMode(true)
         setIsRollMode(false)
         setIsSearchMode(false)
+        setFilterKey("all")
         onSortStudents()
         break
       case "search":
         setIsSortMode(false)
         setIsRollMode(false)
         setIsSearchMode(true)
+        setFilterKey("all")
         break
       case "roll":
         setIsRollMode(true)
@@ -97,35 +120,45 @@ export const HomeBoardPage: React.FC = () => {
     }
   }
 
-  const onActiveRollAction = (action: ActiveRollAction) => {
-    if (action === "exit") {
+  const onActiveRollAction = (action: ActiveRollAction, value?: ItemType) => {
+    if (action === "filter" && !!value) {
+      setFilterKey(value)
+    }
+    else {
       setIsRollMode(false)
+      setFilterKey("all")
     }
   }
 
   const searchStudents = (search: string) => {
-    if (!!data?.students) setStudentsData(data.students.filter((x) => PersonHelper.getFullName(x).toLowerCase().includes(search.toLowerCase())))
+    setFilterStudentsData(studentsData.filter((x) => PersonHelper.getFullName(x).toLowerCase().includes(search.toLowerCase())))
   }
 
   const onSortStudents = () => {
-    if (data?.students) {
-      if (sortMode === "asc") {
-        let AscData = data.students.sort((x, y) => {
-          let a = PersonHelper.getFullName(x).toUpperCase(),
-            b = PersonHelper.getFullName(y).toUpperCase()
-          return a == b ? 0 : a > b ? 1 : -1
-        })
-        setStudentsData(AscData)
-        setSortMode("des")
-      } else {
-        let DescData = data.students.sort((x, y) => {
-          let a = PersonHelper.getFullName(x).toUpperCase(),
-            b = PersonHelper.getFullName(y).toUpperCase()
-          return a == b ? 0 : a > b ? -1 : 1
-        })
-        setStudentsData(DescData)
-        setSortMode("asc")
-      }
+    if (sortMode === "asc") {
+      let AscData = filterStudentsData.sort((x, y) => {
+        let a = PersonHelper.getFullName(x).toUpperCase(),
+          b = PersonHelper.getFullName(y).toUpperCase()
+        return a == b ? 0 : a > b ? 1 : -1
+      })
+      setFilterStudentsData(AscData)
+      setSortMode("des")
+    } else {
+      let DescData = filterStudentsData.sort((x, y) => {
+        let a = PersonHelper.getFullName(x).toUpperCase(),
+          b = PersonHelper.getFullName(y).toUpperCase()
+        return a == b ? 0 : a > b ? -1 : 1
+      })
+      setFilterStudentsData(DescData)
+      setSortMode("asc")
+    }
+  }
+
+
+  const rollDetails = (rollType: RolllStateType, id?: number) => {
+    if (!!id) {
+      let rData = { student_id: id, roll_state: rollType }
+      setRollData(prevState => [...prevState.filter(x => x.student_id !== id), rData])
     }
   }
 
@@ -147,10 +180,10 @@ export const HomeBoardPage: React.FC = () => {
           </CenteredContainer>
         )}
 
-        {loadState === "loaded" && data?.students && (
+        {loadState === "loaded" && filterStudentsData && (
           <>
-            {studentsData.map((s) => (
-              <StudentListTile key={s.id} isRollMode={isRollMode} student={s} isCheckedAll={isCheckAll} isChecked={isCheck.map((li) => li).toString()} />
+            {filterStudentsData.map((res) => (
+              <StudentListTile student={res} RollData={rollData.filter(x => x.student_id === res.id)[0]} getRoll={(roll: RolllStateType) => rollDetails(roll, res.id)} key={res.id} isRollMode={isRollMode} isCheckedAll={isCheckAll} isChecked={isCheck.map((li) => li).toString()} />
             ))}
           </>
         )}
@@ -161,7 +194,7 @@ export const HomeBoardPage: React.FC = () => {
           </CenteredContainer>
         )}
       </S.PageContainer>
-      <ActiveRollOverlay isActive={isRollMode} onItemClick={onActiveRollAction} />
+      <ActiveRollOverlay isActive={isRollMode} onItemClick={onActiveRollAction} StudentsRollData={studentsData} />
     </>
   )
 }

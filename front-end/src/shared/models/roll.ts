@@ -1,3 +1,5 @@
+import { Person } from "./person";
+
 export interface Roll {
   id: number
   name: string
@@ -9,4 +11,11 @@ export interface RollInput {
   student_roll_states: { student_id: number; roll_state: RolllStateType }[]
 }
 
+export interface RollDataModel {
+  student_id: number
+  roll_state: RolllStateType
+}
+
 export type RolllStateType = "unmark" | "present" | "absent" | "late"
+
+export type StudentsRollType = (RollDataModel & Person);

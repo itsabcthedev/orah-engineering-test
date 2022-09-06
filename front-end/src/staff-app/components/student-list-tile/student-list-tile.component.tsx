@@ -1,18 +1,21 @@
-import React from "react"
+import React, { useEffect, useState } from "react"
 import styled from "styled-components"
 import { Spacing, BorderRadius, FontWeight } from "shared/styles/styles"
 import { Images } from "assets/images"
 import { Colors } from "shared/styles/colors"
 import { Person, PersonHelper } from "shared/models/person"
 import { RollStateSwitcher } from "staff-app/components/roll-state/roll-state-switcher.component"
+import { RollDataModel, RollInput, RolllStateType } from "shared/models/roll"
 
 interface Props {
   isRollMode?: boolean
   student: Person;
   isCheckedAll?: boolean;
-  isChecked: string
+  isChecked: string;
+  getRoll: (rollType: RolllStateType) => void;
+  RollData: RollDataModel;
 }
-export const StudentListTile: React.FC<Props> = ({ isRollMode, student, isCheckedAll, isChecked }) => {
+export const StudentListTile: React.FC<Props> = ({ isRollMode, student, isCheckedAll, isChecked, getRoll, RollData }) => {
   return (
     <S.Container>
       <S.Avatar url={Images.avatar}></S.Avatar>
@@ -21,7 +24,7 @@ export const StudentListTile: React.FC<Props> = ({ isRollMode, student, isChecke
       </S.Content>
       {isRollMode && (
         <S.Roll>
-          <RollStateSwitcher />
+          <RollStateSwitcher onStateChange={getRoll} initialState={RollData && RollData.roll_state}/>
         </S.Roll>
       )}
     </S.Container>
