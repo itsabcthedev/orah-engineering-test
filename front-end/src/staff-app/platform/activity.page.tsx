@@ -1,20 +1,24 @@
-import React, { useEffect } from "react"
-import styled from "styled-components"
-import { Spacing } from "shared/styles/styles"
-import { useApi } from "shared/hooks/use-api"
-import { RollInput } from "shared/models/roll"
-import { CenteredContainer } from "shared/components/centered-container/centered-container.component"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import React, { useEffect, useState } from "react"
+import { CenteredContainer } from "shared/components/centered-container/centered-container.component"
+import { useApi } from "shared/hooks/use-api"
 import { Activity } from "shared/models/activity"
+import { Person, PersonHelper } from "shared/models/person"
+import { Spacing } from "shared/styles/styles"
+import styled from "styled-components"
+import { DisplayActivity } from "./display.activity.component"
 
 export const ActivityPage: React.FC = () => {
   const [getActivities, data, loadState] = useApi<{ activity: Activity[] }>({ url: "get-activities" })
-
+  const [getStudents, studentsData] = useApi<{ students: Person[] }>({ url: "get-homeboard-students" })
   useEffect(() => {
     getActivities()
   }, [getActivities])
 
-  console.log("object", loadState, data)
+  useEffect(() => {
+    getStudents()
+  }, [getStudents])
+
 
   return <S.Container>
 
@@ -26,7 +30,17 @@ export const ActivityPage: React.FC = () => {
 
     {loadState === "loaded" && (
       <CenteredContainer>
-        {JSON.stringify(data?.activity)}
+        {/* {data?.activity.map(x =>
+          <>
+            Roll Name: <div>{x.entity.name}</div>
+            Roll Date:<div></div>
+            {x.entity.student_roll_states.map(y => <>
+              Roll State:<div>{y.roll_state}</div>
+              Name: <div>{studentsData && PersonHelper.getFullName(studentsData.students.filter(s => s.id === y.student_id).map(n => n)[0])}</div>
+            </>)}
+          </>
+        )} */}
+        {!!data?.activity.length && <DisplayActivity activityData={data.activity} />}
       </CenteredContainer>
     )}
 

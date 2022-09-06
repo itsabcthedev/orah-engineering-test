@@ -3,8 +3,6 @@ import ListItemText from "@material-ui/core/ListItemText";
 import MenuItem from "@material-ui/core/MenuItem";
 import React from "react";
 import { SortDataModel } from "shared/models/person";
-import Popover from '@material-ui/core/Popover';
-import ToolTip from "../tooltip/tooltip.component";
 
 
 interface SwitchSortProps {
@@ -24,6 +22,8 @@ export const SwitchSort: React.FC<SwitchSortProps> = (props) => {
                     onChange={props.handleSelectAll}
                     id="selectAll"
                     name="selectAll"
+                    color="primary"
+                    classes={{colorPrimary:"checkbox-color-primary"}}
                 />
                 <ListItemText primary={"Select All"} />
             </MenuItem>
@@ -35,6 +35,8 @@ export const SwitchSort: React.FC<SwitchSortProps> = (props) => {
                         key={name.id}
                         checked={props.isCheck.includes(name.id)}
                         onChange={props.handleClick}
+                        color="primary"
+                        classes={{colorPrimary:"checkbox-color-primary"}}
                     />
                     <ListItemText primary={name.title} />
                 </MenuItem>

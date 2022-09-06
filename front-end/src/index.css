@@ -38,3 +38,19 @@ input[text="text"]:focus-visible {
 .p-1 {
   padding: 0.5rem;
 }
+
+.p-2 {
+  padding: 1rem;
+}
+
+.btn-color-primary {
+  color: "#fff" !important;
+}
+
+.btn-color-disabled {
+  color: #9b9b9b !important;
+}
+
+.checkbox-color-primary {
+  color: #343f64 !important;
+}

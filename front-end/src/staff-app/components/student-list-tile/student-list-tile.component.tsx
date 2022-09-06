@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from "react"
-import styled from "styled-components"
-import { Spacing, BorderRadius, FontWeight } from "shared/styles/styles"
 import { Images } from "assets/images"
-import { Colors } from "shared/styles/colors"
+import React from "react"
 import { Person, PersonHelper } from "shared/models/person"
+import { RollDataModel, RolllStateType } from "shared/models/roll"
+import { Colors } from "shared/styles/colors"
+import { BorderRadius, FontWeight, Spacing } from "shared/styles/styles"
 import { RollStateSwitcher } from "staff-app/components/roll-state/roll-state-switcher.component"
-import { RollDataModel, RollInput, RolllStateType } from "shared/models/roll"
+import styled from "styled-components"
 
 interface Props {
   isRollMode?: boolean

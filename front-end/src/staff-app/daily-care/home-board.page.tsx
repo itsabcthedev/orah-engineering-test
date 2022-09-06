@@ -22,7 +22,7 @@ export const HomeBoardPage: React.FC = () => {
   const [isSearchMode, setIsSearchMode] = useState(false)
   const [sortMode, setSortMode] = useState<SortMode>("asc")
   const [getStudents, data, loadState] = useApi<{ students: Person[] }>({ url: "get-homeboard-students" })
-  const [submitRoll, loadStateRoll] = useApi({ url: "save-roll" })
+  const [submitRoll] = useApi({ url: "save-roll" })
   const [studentsData, setStudentsData] = useState<StudentsRollType[]>([])
   const [filterStudentsData, setFilterStudentsData] = useState<StudentsRollType[]>([])
   const [sortType, setSortType] = useState<SortDataModel[]>([]);
@@ -139,10 +139,10 @@ export const HomeBoardPage: React.FC = () => {
         "student_roll_states": rollData
       }
       submitRoll(param);
+      setIsRollMode(false)
     }
   }
 
-  console.log("object", loadStateRoll)
   const searchStudents = (search: string) => {
     setFilterStudentsData(studentsData.filter((x) => PersonHelper.getFullName(x).toLowerCase().includes(search.toLowerCase())))
   }

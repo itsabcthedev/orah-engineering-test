@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react"
-import styled from "styled-components"
 import Button from "@material-ui/core/Button"
+import React from "react"
+import { StudentsRollType } from "shared/models/roll"
 import { BorderRadius, Spacing } from "shared/styles/styles"
 import { ItemType, RollStateList } from "staff-app/components/roll-state/roll-state-list.component"
-import { StudentsRollType } from "shared/models/roll"
+import styled from "styled-components"
 
 export type ActiveRollAction = "filter" | "complete" | "exit"
 
@@ -33,7 +33,7 @@ export const ActiveRollOverlay: React.FC<Props> = (props) => {
             <Button color="inherit" onClick={() => onItemClick("exit")}>
               Exit
             </Button>
-            <Button color="inherit" style={{ marginLeft: Spacing.u2 }} onClick={() => onItemClick("complete")}>
+            <Button classes={{ disabled: "btn-color-disabled" }} disabled={!StudentsRollData.filter(x => !!x.student_id).length} color="inherit" style={{ marginLeft: Spacing.u2 }} onClick={() => onItemClick("complete")}>
               Complete
             </Button>
           </div>
