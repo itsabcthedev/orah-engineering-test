@@ -1,0 +1,1 @@
+web: vite serve --port $PORT
