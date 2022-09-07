@@ -2,10 +2,7 @@ import AppBar from "@material-ui/core/AppBar";
 import Dialog from "@material-ui/core/Dialog";
 import Divider from "@material-ui/core/Divider";
 import IconButton from "@material-ui/core/IconButton";
-import Slide from "@material-ui/core/Slide";
 import Toolbar from "@material-ui/core/Toolbar";
-import { TransitionProps } from "@material-ui/core/transitions";
-import Typography from "@material-ui/core/Typography";
 import * as React from "react";
 
 interface ModalProps {
@@ -13,15 +10,6 @@ interface ModalProps {
     Icon: JSX.Element;
     title: JSX.Element;
 }
-
-const Transition = React.forwardRef(function Transition(
-    props: TransitionProps & {
-        children: React.ReactElement;
-    },
-    ref: React.Ref<unknown>
-) {
-    return <Slide direction="up" ref={ref} {...props} />;
-});
 
 export const ModalComponent: React.FC<ModalProps> = (props) => {
     const [open, setOpen] = React.useState(false);
