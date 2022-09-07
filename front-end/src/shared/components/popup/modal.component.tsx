@@ -1,3 +1,4 @@
+import { Button, DialogActions } from "@material-ui/core";
 import AppBar from "@material-ui/core/AppBar";
 import Dialog from "@material-ui/core/Dialog";
 import Divider from "@material-ui/core/Divider";
@@ -60,6 +61,9 @@ export const ModalComponent: React.FC<ModalProps> = (props) => {
                 </AppBar>
                 <Divider />
                 {props.children}
+                <DialogActions>
+                    <Button color="secondary" variant="outlined" onClick={handleClose} fullWidth>Close</Button>
+                </DialogActions>
             </Dialog>
         </>
     );
