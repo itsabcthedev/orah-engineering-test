@@ -28,8 +28,8 @@ export const DisplayActivity = (props: GridProps) => {
 
     const { activityData } = props
     return (<div className="cardContainer overflowY h-v-75" id="scrollbar">
-        {activityData.map(x =>
-            <div className="card cardBg">
+        {activityData.map((x, index) =>
+            <div className="card cardBg" key={x.date.toLocaleString() + index}>
                 <div className="cardName cardNameBg">{x.entity.name}</div>
                 <div className="flex cardTitle">Completed At</div>
                 <div className="flex cardText">{convertDateToISo(x.date)[0]} {convertDateToISo(x.date)[1]}</div>
@@ -44,7 +44,7 @@ export const DisplayActivity = (props: GridProps) => {
                             </S.Title>
                         </S.ToolbarContainer>
                         <div className='overflow'>                            {x.entity.student_roll_states.map(y =>
-                            <S.Container>
+                            <S.Container key={y.student_id}>
                                 <S.Content>{studentsData && PersonHelper.getFullName(studentsData.students.filter(s => s.id === y.student_id).map(n => n)[0])}</S.Content>
                                 <S.Content>{y.roll_state}</S.Content>
                             </S.Container>
