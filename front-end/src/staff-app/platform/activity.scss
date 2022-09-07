@@ -1,87 +1,109 @@
-.flex-table {
+.cardContainer {
+    display: flex;
     width: 100%;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+}
+
+.card {
     display: flex;
     flex-direction: column;
-    box-sizing: border-box;
-
-    .ft-header {
-        display: flex;
-        flex-direction: row;
-        background-color: #343f64 !important;
-        color: #fff;
-        box-shadow: 0 2px 7px rgba(5, 66, 145, 0.13);
-        font-weight: 600;
-
-        div {
-            flex-basis: 33%;
-            flex-grow: 1;
-            padding: 1rem;
-
-            &:first-child {
-                flex-basis: 5%
-            }
-        }
-    }
-
-    .ft-body-wrap {
-        max-height: 60vh;
-        overflow-y: auto;
-        background-color: #F5F5F5;
-        color: #1b4f90;
-
-        .ft-body {
-            display: flex;
-            flex-direction: column;
-
-            .ft-row {
-                display: flex;
-                flex-direction: row;
-                font-weight: 600;
-
-                div {
-                    flex-basis: 33%;
-                    flex-grow: 1;
-                    padding: 1rem;
-
-                    &:first-child {
-                        flex-basis: 5%
-                    }
-                }
-
-                &:nth-child(2n) {
-                    background-color: #1b4f90;
-                    color: #fff
-                }
-            }
-        }
-    }
-
-    .ft-cell {
-        // border: 4px solid #1b4f90;
-
-        // &:nth-child(2n) {
-        //     border: 4px solid #F5F5F5;
-        // }
-    }
+    width: 20%;
+    align-items: baseline;
+    height: 20vh;
+    border-radius: 20px;
+    cursor: pointer;
+    margin: 1rem;
 }
 
-//scroll bar
-
-#scrollbar::-webkit-scrollbar-track
-{
-    box-shadow: inset 0 0 6px #2222224d;
-	-webkit-box-shadow: inset 0 0 6px #2222224d;
-	background-color: #F5F5F5;
+.cardName {
+    width: 70%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0.25rem;
+    margin: 10px 0px;
+    border-radius: 0px 50px 50px 0px;
+    color: #fff;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-shadow: 0px 3px 5px #343f64;
+    font-weight: 600;
+    font-size: 18px;
+    position: relative;
 }
 
-#scrollbar::-webkit-scrollbar
-{
-	width: 2px;
-	background-color: #F5F5F5;
+.cardTitle {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-transform: uppercase;
+    font-size: 18px;
+    font-weight: 400;
+    margin-bottom: 0.25rem;
 }
 
-#scrollbar::-webkit-scrollbar-thumb
-{
-	background-color: #1b4f90;
-	border: 2px solid #4e4e4e;
+.cardText {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-align: center;
+    font-weight: 300;
+    font-size: 14px;
+}
+
+.cardName:before {
+    content: '';
+    width: 34px;
+    height: 70px;
+    position: absolute;
+    left: -33px;
+    top: 0px;
+    border-radius: 50px 0px 0px 50px;
+    z-index: -1;
+    background: -moz-linear-gradient(bottom, #1b4f90, #297bde);
+}
+
+.cardName:after {
+    content: '';
+    width: 25px;
+    height: 20px;
+    position: absolute;
+    left: -25px;
+    bottom: -40px;
+    border-radius: 50px 0px 0px 50px;
+    z-index: -1;
+}
+
+.flex {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+.cardBg {
+    background: #f7ffff;
+    box-shadow: 4px 8px 1px #1b4f90;
+
+    &:hover {
+        box-shadow: 6px 12px 1px #1b4f90;
+    }
+
+}
+
+.cardNameBg {
+    background: #FDFFFE;
+    background: -webkit-linear-gradient(right, #FDFFFE, #1b4f90);
+    background: -moz-linear-gradient(right, #FDFFFE, #1b4f90);
+    background: linear-gradient(to left, #FDFFFE, #1b4f90);
+    box-shadow: 0px 2px 2px #1b4f90;
+}
+
+.cardNameBg:before {
+    background: #1b4f90;
+}
+
+.cardNameBg:after {
+    background: #64a2ed;
 }

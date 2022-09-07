@@ -10,15 +10,9 @@ import { DisplayActivity } from "./display.activity.component"
 
 export const ActivityPage: React.FC = () => {
   const [getActivities, data, loadState] = useApi<{ activity: Activity[] }>({ url: "get-activities" })
-  const [getStudents, studentsData] = useApi<{ students: Person[] }>({ url: "get-homeboard-students" })
   useEffect(() => {
     getActivities()
   }, [getActivities])
-
-  useEffect(() => {
-    getStudents()
-  }, [getStudents])
-
 
   return <S.Container>
 
@@ -29,17 +23,7 @@ export const ActivityPage: React.FC = () => {
     )}
 
     {loadState === "loaded" && (
-      <CenteredContainer>
-        {/* {data?.activity.map(x =>
-          <>
-            Roll Name: <div>{x.entity.name}</div>
-            Roll Date:<div></div>
-            {x.entity.student_roll_states.map(y => <>
-              Roll State:<div>{y.roll_state}</div>
-              Name: <div>{studentsData && PersonHelper.getFullName(studentsData.students.filter(s => s.id === y.student_id).map(n => n)[0])}</div>
-            </>)}
-          </>
-        )} */}
+      <CenteredContainer backgroundColor="#bbdefb">
         {!!data?.activity.length && <DisplayActivity activityData={data.activity} />}
       </CenteredContainer>
     )}
@@ -56,8 +40,8 @@ export const ActivityPage: React.FC = () => {
 const S = {
   Container: styled.div`
     display: flex;
-    flex-direction: column;
-    width: 50%;
-    margin: ${Spacing.u4} auto 0;
+    width: 100%;
+    height:100%;
+    background: #bbdefb;
   `,
 }

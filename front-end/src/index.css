@@ -1,6 +1,13 @@
 @import-normalize;
 /* bring in normalize.css styles */
 
+body,
+#root {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
+
 .app {
   text-align: center;
 }
@@ -17,6 +24,14 @@
 
 .app-header a {
   color: #fff;
+}
+
+.overflowHidden {
+  overflow: hidden;
+}
+
+.overflowY {
+  overflow-y: auto;
 }
 
 input[type="text"] {
@@ -39,8 +54,17 @@ input[text="text"]:focus-visible {
   padding: 0.5rem;
 }
 
-.p-2 {
-  padding: 1rem;
+.my-auto {
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
+.mr-1 {
+  margin-right: 0.5rem;
+}
+
+.h-v-75 {
+  height: 75vh;
 }
 
 .btn-color-primary {
@@ -53,4 +77,22 @@ input[text="text"]:focus-visible {
 
 .checkbox-color-primary {
   color: #343f64 !important;
+}
+
+/* scroll bar */
+
+#scrollbar::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 6px #2222224d;
+  -webkit-box-shadow: inset 0 0 6px #2222224d;
+  background-color: #F5F5F5;
+}
+
+#scrollbar::-webkit-scrollbar {
+  width: 2px;
+  background-color: #F5F5F5;
+}
+
+#scrollbar::-webkit-scrollbar-thumb {
+  background-color: #1b4f90;
+  border: 2px solid #4e4e4e;
 }

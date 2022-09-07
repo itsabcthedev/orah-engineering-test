@@ -18,7 +18,7 @@ export const PopUp: React.FC<PopUpProps> = (props) => {
     };
 
     const open = Boolean(anchorEl);
-    const id = open ? 'simple-popover' : undefined;
+    const id = open ? 'info-popover' : undefined;
 
     return (
         <>

@@ -193,11 +193,11 @@ export const HomeBoardPage: React.FC = () => {
         )}
 
         {loadState === "loaded" && filterStudentsData && (
-          <>
+          <div className="overflowY h-v-75" id="scrollbar">
             {filterStudentsData.map((res) => (
               <StudentListTile student={res} RollData={rollData.filter(x => x.student_id === res.id)[0]} getRoll={(roll: RolllStateType) => rollDetails(roll, res.id)} key={res.id} isRollMode={isRollMode} isCheckedAll={isCheckAll} isChecked={isCheck.map((li) => li).toString()} />
             ))}
-          </>
+          </div>
         )}
 
         {loadState === "error" && (
@@ -216,6 +216,6 @@ const S = {
     display: flex;
     flex-direction: column;
     width: 50%;
-    margin: ${Spacing.u4} auto 140px;
+    margin: ${Spacing.u4} auto;
   `,
 }
